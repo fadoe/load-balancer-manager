@@ -1,0 +1,21 @@
+marktjagd_load_balancer_manager:
+    loadbalancer1:
+        host: http://example.com
+        part: portal
+        auth:
+            username: username
+            password: password
+        hosts:
+            host1:
+                host: 192.168.1.11
+            host2:
+                host: 192.168.1.12
+    loadbalancer2:
+        host: http://example.com
+        part: blog
+        auth:
+            username: username
+            password: password
+        hosts:
+            host3:
+                host: 192.168.1.13
