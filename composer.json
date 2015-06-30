@@ -27,5 +27,8 @@
     },
     "config": {
         "bin-dir": "bin"
-    }
+    },
+    "bin": [
+        "bin/balancermanager"
+    ]
 }
