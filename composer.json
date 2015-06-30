@@ -1,6 +1,6 @@
 {
     "name": "marktjagd/load-balancer-manager",
-    "license": "BSD-2.0",
+    "license": "MIT",
     "type": "project",
     "autoload": {
         "psr-4": {
