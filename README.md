@@ -43,7 +43,7 @@ marktjagd_load_balancer_manager:
     loadbalancer1:                      # the name from the load balancer, used for command line
         host: <http://example.com>      # the url to the load balancer
         part: <portal>                  # the part on the apache page after balancer://
-        auth:                           # authentication via http auth
+        auth:                           # authentication via http auth, optional
             username: <username>        # the username
             password: <password>        # the password
         hosts:                          # load balancer hosts

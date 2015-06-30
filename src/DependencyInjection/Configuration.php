@@ -33,7 +33,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('host')->isRequired()->canNotBeEmpty()->end()
                         ->scalarNode('part')->isRequired()->canNotBeEmpty()->end()
                         ->arrayNode('auth')
-                            ->isRequired()
                             ->children()
                                 ->scalarNode('username')->isRequired()->canNotBeEmpty()->end()
                                 ->scalarNode('password')->isRequired()->canNotBeEmpty()->end()

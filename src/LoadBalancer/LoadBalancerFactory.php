@@ -34,14 +34,18 @@ class LoadBalancerFactory
 
         $config = $this->config[$loadBalancer];
 
+        $requestOptions = array(
+            'verify' => false,
+        );
+        if (isset($config['auth'])) {
+            $requestOptions['auth'] = array($config['auth']['username'], $config['auth']['password'], 'Basic');
+        }
+
         $this->httpClient->setBaseUrl($config['host']);
         $this->httpClient->setConfig(
             array(
                 'redirect.disable' => true,
-                'request.options' => array(
-                    'verify' => false,
-                    'auth'    => array($config['auth']['username'], $config['auth']['password'], 'Basic'),
-                ),
+                'request.options' => $requestOptions,
             )
         );
 
