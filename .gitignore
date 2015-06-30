@@ -1,5 +1,3 @@
 vendor
 app/config/*
 !app/config/lbm-config.yml.dist
-bin/*
-!bin/balancermanager
