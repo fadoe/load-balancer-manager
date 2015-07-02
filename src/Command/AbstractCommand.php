@@ -30,7 +30,7 @@ abstract class AbstractCommand extends BaseCommand implements ContainerAwareInte
             $application = $this->getApplication();
             if (null === $application) {
                 throw new \LogicException(
-                    'The container can not be retrieved as the application instance is nit yet set.'
+                    'The container can not be retrieved as the application instance is not yet set.'
                 );
             }
 

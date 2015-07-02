@@ -32,7 +32,7 @@ class Application extends BaseApplication
         parent::__construct(static::NAME, static::VERSION);
 
         $this->getDefinition()->addOption(
-            new InputOption('--config-path', '-c', InputOption::VALUE_OPTIONAL, 'The path to ldm-config.yml')
+            new InputOption('--config-path', '-c', InputOption::VALUE_OPTIONAL, 'The path to lbm-config.yml')
         );
     }
 
