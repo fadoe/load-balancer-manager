@@ -5,6 +5,12 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Apache22 extends AbstractLoadBalancer
 {
+    /**
+     * @param string $loadBalancer
+     *
+     * @return array
+     * @throws \Exception
+     */
     public function getWebserverStatus($loadBalancer)
     {
         $balancerPart = $this->findBalancerPart();
@@ -13,6 +19,13 @@ class Apache22 extends AbstractLoadBalancer
         return $workers;
     }
 
+    /**
+     * @param string $loadBalancer
+     * @param string $host
+     *
+     * @return bool
+     * @throws \Exception
+     */
     public function activateWebserver($loadBalancer, $host)
     {
         $balancerPart = $this->findBalancerPart();
@@ -21,6 +34,13 @@ class Apache22 extends AbstractLoadBalancer
         return $this->manageLoadBalancing($hostLink, self::ENABLE_WEBSERVER);
     }
 
+    /**
+     * @param string $loadBalancer
+     * @param string $host
+     *
+     * @return bool
+     * @throws \Exception
+     */
     public function deactivateWebserver($loadBalancer, $host)
     {
         $balancerPart = $this->findBalancerPart();
@@ -29,6 +49,9 @@ class Apache22 extends AbstractLoadBalancer
         return $this->manageLoadBalancing($hostLink, self::DISABLE_WEBSERVER);
     }
 
+    /**
+     * @return string
+     */
     protected function getH3Regex()
     {
         return '//h3[contains(text(), "balancer://%s")]';

@@ -36,7 +36,7 @@ class Apache24 extends AbstractLoadBalancer
 
     /**
      * @param string $loadBalancer
-     * @param        $host
+     * @param string $host
      *
      * @return bool
      * @throws \Exception
@@ -49,11 +49,21 @@ class Apache24 extends AbstractLoadBalancer
         return $this->manageLoadBalancing($hostLink, self::DISABLE_WEBSERVER);
     }
 
+    /**
+     * @return string
+     */
     protected function getH3Regex()
     {
         return '//h3[./a[contains(text(), "balancer://%s")]]';
     }
 
+    /**
+     * @param string $hostLink
+     * @param boolean $enable
+     *
+     * @return bool
+     * @throws \Exception
+     */
     private function manageLoadBalancing($hostLink, $enable)
     {
         $response = $this->getWorkerSettingsPart($hostLink);

@@ -74,7 +74,7 @@ abstract class AbstractLoadBalancer
      * @throws \Exception
      *
      * @param string $loadBalancer
-     * @param $webserverName
+     * @param string $webserverName
      */
     abstract public function deactivateWebserver($loadBalancer, $webserverName);
 
@@ -141,7 +141,6 @@ abstract class AbstractLoadBalancer
          * @var \DOMElement $row
          */
         foreach ($rows as $key => $row) {
-
             if ($key > 0) {
                 $worker = array(
                     'worker' => $row->childNodes->item(0)->nodeValue,
