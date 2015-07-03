@@ -15,7 +15,7 @@ class ShowCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $balancers = $this->getLoadBalancerConfig();
+        $balancers = $this->getApplication()->getLoadBalancerConfig();
 
         $table = $this->getHelper('table');
         $table->setHeaders(array('HOST'));

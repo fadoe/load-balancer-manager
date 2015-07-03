@@ -42,7 +42,7 @@ class ActivateCommand extends AbstractCommand
         }
 
         $output->writeln(
-            sprintf('<error>Error while activating worker %s on load balancer %s', $webServer, $loadBalancer)
+            sprintf('<error>Error while activating worker %s on load balancer %s</error>', $webServer, $loadBalancer)
         );
 
         return 1;

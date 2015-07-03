@@ -3,41 +3,18 @@ namespace Marktjagd\LoadBalancerManager\Command;
 
 use Marktjagd\LoadBalancerManager\LoadBalancer\LoadBalancerFactory;
 use Symfony\Component\Console\Command\Command as BaseCommand;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class AbstractCommand extends BaseCommand implements ContainerAwareInterface
+abstract class AbstractCommand extends BaseCommand
 {
-    private $container;
     private $loadBalancerFactory;
+    private $config;
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     * @param array $config
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function setLoadBalancerConfig(array $config)
     {
-        $this->container = $container;
-    }
-
-    /**
-     * @return ContainerInterface
-     */
-    protected function getContainer()
-    {
-        if (null === $this->container) {
-            $application = $this->getApplication();
-            if (null === $application) {
-                throw new \LogicException(
-                    'The container can not be retrieved as the application instance is not yet set.'
-                );
-            }
-
-            $this->setContainer($application->getContainer());
-        }
-
-        return $this->container;
+        $this->config = $config;
     }
 
     /**
@@ -52,13 +29,5 @@ abstract class AbstractCommand extends BaseCommand implements ContainerAwareInte
         }
 
         return $this->loadBalancerFactory;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getLoadBalancerConfig()
-    {
-        return $this->getContainer()->getParameter('marktjagd_load_balancer_manager');
     }
 }

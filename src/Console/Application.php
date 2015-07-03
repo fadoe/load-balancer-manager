@@ -13,9 +13,7 @@ use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class Application extends BaseApplication
@@ -23,8 +21,14 @@ class Application extends BaseApplication
     const NAME = 'Load Balancer Manager';
     const VERSION = '1.0-dev';
 
+    /**
+     * @var bool
+     */
     private $commandsRegistered = false;
 
+    /**
+     * @var ContainerBuilder
+     */
     private $container;
 
     public function __construct()
@@ -52,14 +56,6 @@ class Application extends BaseApplication
 
         $this->setUpContainerBuilder($input);
 
-        $container = $this->getContainer();
-
-        foreach ($this->all() as $command) {
-            if ($command instanceof ContainerAwareInterface) {
-                $command->setContainer($container);
-            }
-        }
-
         $containerBuilder = $this->setUpContainerBuilder($input);
 
         $this->container = $containerBuilder;
@@ -70,22 +66,24 @@ class Application extends BaseApplication
     }
 
     /**
-     * @return ContainerInterface
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
      * @return LoadBalancerFactory
      */
     public function getLoadBalancerFactory()
     {
-        return new LoadBalancerFactory(
+        $loadBalancerFactory = new LoadBalancerFactory(
             $this->getHttpClient(),
-            $this->getContainer()->getParameter('marktjagd_load_balancer_manager')
+            $this->getLoadBalancerConfig()
         );
+
+        return $loadBalancerFactory;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLoadBalancerConfig()
+    {
+        return $this->container->getParameter('marktjagd_load_balancer_manager');
     }
 
     /**
