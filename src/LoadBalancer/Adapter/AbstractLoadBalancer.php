@@ -1,7 +1,7 @@
 <?php
 namespace Marktjagd\LoadBalancerManager\LoadBalancer\Adapter;
 
-use Guzzle\Http\Client;
+use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Message\Response;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -14,17 +14,17 @@ abstract class AbstractLoadBalancer
     private $config;
 
     /**
-     * @param Client $httpClient
+     * @param ClientInterface $httpClient
      * @param array  $config
      */
-    public function __construct(Client $httpClient, array $config)
+    public function __construct(ClientInterface $httpClient, array $config)
     {
         $this->httpClient = $httpClient;
         $this->config = $config;
     }
 
     /**
-     * @return Client
+     * @return ClientInterface
      */
     protected function getHttpClient()
     {

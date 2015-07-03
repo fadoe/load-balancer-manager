@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head><title>Balancer Manager</title>
+    <style type='text/css'>
+        table {
+            border-width: 1px;
+            border-spacing: 3px;
+            border-style: solid;
+            border-color: gray;
+            border-collapse: collapse;
+            background-color: white;
+            text-align: center;
+        }
+
+        th {
+            border-width: 1px;
+            padding: 2px;
+            border-style: dotted;
+            border-color: gray;
+            background-color: white;
+            text-align: center;
+        }
+
+        td {
+            border-width: 1px;
+            padding: 2px;
+            border-style: dotted;
+            border-color: gray;
+            background-color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body><h1>Load Balancer Manager for www.intranet.marktjagd.de</h1>
+
+<dl>
+    <dt>Server Version: Apache/2.4.7</dt>
+    <dt>Server Built: Mar 10 2015 13:05:59</dt>
+    <dt>Balancer changes will NOT be persisted on restart.</dt>
+    <dt>Balancers are inherited from main server.</dt>
+    <dt>ProxyPass settings are inherited from main server.</dt>
+</dl>
+<hr/>
+<h3>LoadBalancer Status for <a href="/balancer?b=backend&nonce=32132c0f-238d-4075-a191-a9b021268233">balancer://backend</a>
+    [pd9ca45a8_backend]</h3>
+
+
+<table>
+    <tr>
+        <th>MaxMembers</th>
+        <th>StickySession</th>
+        <th>DisableFailover</th>
+        <th>Timeout</th>
+        <th>FailoverAttempts</th>
+        <th>Method</th>
+        <th>Path</th>
+        <th>Active</th>
+    </tr>
+    <tr>
+        <td>3 [3 Used]</td>
+        <td> (None)
+        <td>Off</td>
+        </td>
+        <td>0</td>
+        <td>2</td>
+        <td>bybusyness</td>
+        <td>/</td>
+        <td>Yes</td>
+</table>
+<br/>
+
+<table>
+    <tr>
+        <th>Worker URL</th>
+        <th>Route</th>
+        <th>RouteRedir</th>
+        <th>Factor</th>
+        <th>Set</th>
+        <th>Status</th>
+        <th>Elected</th>
+        <th>Busy</th>
+        <th>Load</th>
+        <th>To</th>
+        <th>From</th>
+    </tr>
+    <tr>
+        <td><a href="/balancer?b=backend&w=http://192.168.1.1&nonce=32132c0f-238d-4075-a191-a9b021268233">http://192.168.1.1</a>
+        </td>
+        <td></td>
+        <td></td>
+        <td>1</td>
+        <td>0</td>
+        <td>Init Ok</td>
+        <td>10</td>
+        <td>0</td>
+        <td>0</td>
+        <td>8.9K</td>
+        <td> 28K</td>
+    </tr>
+    <tr>
+        <td><a href="/balancer?b=backend&w=http://192.168.1.2&nonce=32132c0f-238d-4075-a191-a9b021268233">http://192.168.1.2</a>
+        </td>
+        <td></td>
+        <td></td>
+        <td>1</td>
+        <td>0</td>
+        <td>Init Ok</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1.0K</td>
+        <td>5.6K</td>
+    </tr>
+    <tr>
+        <td><a href="/balancer?b=backend&w=http://192.168.1.3&nonce=32132c0f-238d-4075-a191-a9b021268233">http://192.168.1.3</a>
+        </td>
+        <td></td>
+        <td></td>
+        <td>1</td>
+        <td>0</td>
+        <td>Init Ok</td>
+        <td>5</td>
+        <td>0</td>
+        <td>3</td>
+        <td>4.2K</td>
+        <td>5.7K</td>
+    </tr>
+</table>
+<hr/>
+<h3>LoadBalancer Status for <a href="/balancer?b=frontend&nonce=09352772-9ff7-424b-aa4b-881c4e341083">balancer://frontend</a>
+    [pd9ca45a8_frontend]</h3>
+
+
+<table>
+    <tr>
+        <th>MaxMembers</th>
+        <th>StickySession</th>
+        <th>DisableFailover</th>
+        <th>Timeout</th>
+        <th>FailoverAttempts</th>
+        <th>Method</th>
+        <th>Path</th>
+        <th>Active</th>
+    </tr>
+    <tr>
+        <td>1 [1 Used]</td>
+        <td> (None)
+        <td>Off</td>
+        </td>
+        <td>0</td>
+        <td>0</td>
+        <td>bybusyness</td>
+        <td>^/corporate(.*)</td>
+        <td>Yes</td>
+</table>
+<br/>
+
+<table>
+    <tr>
+        <th>Worker URL</th>
+        <th>Route</th>
+        <th>RouteRedir</th>
+        <th>Factor</th>
+        <th>Set</th>
+        <th>Status</th>
+        <th>Elected</th>
+        <th>Busy</th>
+        <th>Load</th>
+        <th>To</th>
+        <th>From</th>
+    </tr>
+    <tr>
+        <td><a href="/balancer?b=frontend&w=http://192.168.2.1&nonce=09352772-9ff7-424b-aa4b-881c4e341083">http://192.168.2.1</a>
+        </td>
+        <td></td>
+        <td></td>
+        <td>1</td>
+        <td>0</td>
+        <td>Init Ok</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td> 0</td>
+        <td> 0</td>
+    </tr>
+</table>
+<hr/>
+</body>
+</html>

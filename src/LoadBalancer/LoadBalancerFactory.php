@@ -1,7 +1,7 @@
 <?php
 namespace Marktjagd\LoadBalancerManager\LoadBalancer;
 
-use Guzzle\Http\Client;
+use Guzzle\Http\ClientInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 class LoadBalancerFactory
@@ -10,10 +10,10 @@ class LoadBalancerFactory
     private $config;
 
     /**
-     * @param Client $httpClient
+     * @param ClientInterface $httpClient
      * @param array  $config
      */
-    public function __construct(Client $httpClient, array $config)
+    public function __construct(ClientInterface $httpClient, array $config)
     {
         $this->httpClient = $httpClient;
         $this->config = $config;
@@ -29,7 +29,7 @@ class LoadBalancerFactory
     public function getLoadBalancerAdapter($loadBalancer)
     {
         if (false === isset($this->config[$loadBalancer])) {
-            throw new \Exception(sprintf('Config for load balancer %s not found', $loadBalancer));
+            throw new \Exception(sprintf('Config for load balancer "%s" not found', $loadBalancer));
         }
 
         $config = $this->config[$loadBalancer];
@@ -51,6 +51,10 @@ class LoadBalancerFactory
 
         $apacheVersion = $this->getApacheVersion();
         $adapterClass = $this->convertApacheVersionToFactoryMethod($apacheVersion);
+
+        if (false === class_exists($adapterClass)) {
+            throw new \Exception('No load balancer adapter found');
+        }
 
         return new $adapterClass($this->httpClient, $config);
     }
