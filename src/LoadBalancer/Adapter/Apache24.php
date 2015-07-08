@@ -6,12 +6,10 @@ use Symfony\Component\DomCrawler\Crawler;
 class Apache24 extends AbstractLoadBalancer
 {
     /**
-     * @param string $loadBalancer
-     *
      * @return array
      * @throws \Exception
      */
-    public function getWebserverStatus($loadBalancer)
+    public function getWebserverStatus()
     {
         $balancerPart = $this->findBalancerPart();
         $workers = $this->getWorkerFromBalancerPart($balancerPart);
@@ -20,13 +18,12 @@ class Apache24 extends AbstractLoadBalancer
     }
 
     /**
-     * @param string $loadBalancer
      * @param string $host
      *
      * @return bool
      * @throws \Exception
      */
-    public function activateWebserver($loadBalancer, $host)
+    public function activateWebserver($host)
     {
         $balancerPart = $this->findBalancerPart();
         $hostLink = $this->findLinkFromBalancerPart($balancerPart, $host);
@@ -35,13 +32,12 @@ class Apache24 extends AbstractLoadBalancer
     }
 
     /**
-     * @param string $loadBalancer
      * @param string $host
      *
      * @return bool
      * @throws \Exception
      */
-    public function deactivateWebserver($loadBalancer, $host)
+    public function deactivateWebserver($host)
     {
         $balancerPart = $this->findBalancerPart();
         $hostLink = $this->findLinkFromBalancerPart($balancerPart, $host);

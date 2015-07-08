@@ -32,7 +32,7 @@ class DeactivateCommand extends AbstractCommand
 
         $adapter = $loadBalancerFactory->getLoadBalancerAdapter($loadBalancer);
 
-        $result = $adapter->deactivateWebserver($loadBalancer, $webServer);
+        $result = $adapter->deactivateWebserver($webServer);
         if (true === $result) {
             $output->writeln(sprintf('<info>Worker %s on load balancer %s deactivated</info>', $webServer, $loadBalancer));
 

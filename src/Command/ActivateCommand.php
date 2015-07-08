@@ -32,7 +32,7 @@ class ActivateCommand extends AbstractCommand
 
         $adapter = $loadBalancerFactory->getLoadBalancerAdapter($loadBalancer);
 
-        $result = $adapter->activateWebserver($loadBalancer, $webServer);
+        $result = $adapter->activateWebserver($webServer);
         if (true === $result) {
             $output->writeln(
                 sprintf('<info>Worker %s on load balancer %s activated</info>', $webServer, $loadBalancer)

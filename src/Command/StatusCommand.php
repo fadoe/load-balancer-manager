@@ -24,7 +24,7 @@ class StatusCommand extends AbstractCommand
 
         $factory = $this->getLoadBalancerFactory();
         $adapter = $factory->getLoadBalancerAdapter($loadBalancer);
-        $worker = $adapter->getWebserverStatus($loadBalancer);
+        $worker = $adapter->getWebserverStatus();
 
         $table = $this->getHelper('table');
         $table->setHeaders(array('Worker', 'Status'));

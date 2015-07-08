@@ -52,31 +52,27 @@ abstract class AbstractLoadBalancer
      *
      * @throws \Exception
      *
-     * @param string $loadBalancer
-     *
      * @return array
      */
-    abstract public function getWebserverStatus($loadBalancer);
+    abstract public function getWebserverStatus();
 
     /**
      * Activate webserver on load balancer.
      *
      * @throws \Exception
      *
-     * @param string $loadBalancer
      * @param string $webserverName
      */
-    abstract public function activateWebserver($loadBalancer, $webserverName);
+    abstract public function activateWebserver($webserverName);
 
     /**
      * Deactivate webserver on load balancer.
      *
      * @throws \Exception
      *
-     * @param string $loadBalancer
      * @param string $webserverName
      */
-    abstract public function deactivateWebserver($loadBalancer, $webserverName);
+    abstract public function deactivateWebserver($webserverName);
 
     /**
      * Get regular expression to find worker part on load balancer manager page.
@@ -105,8 +101,8 @@ abstract class AbstractLoadBalancer
         if (0 == iterator_count($headline3)) {
             throw new \Exception(
                 sprintf(
-                    'Unknown page layout for load-balancer URL "%s": Unable to find H3',
-                    $request->getUrl()
+                    'Can\'t find part "%s" on load balancer',
+                    $part
                 )
             );
         }
@@ -181,7 +177,7 @@ abstract class AbstractLoadBalancer
     private function getIpForHostname($hostName)
     {
         if (false === isset($this->config['hosts'][$hostName])) {
-            throw new \Exception(sprintf('Host %s not found in configuration.', $hostName));
+            throw new \Exception(sprintf('Worker "%s" not found in configuration', $hostName));
         }
 
         return $this->config['hosts'][$hostName]['host'];
