@@ -36,7 +36,12 @@ class Application extends BaseApplication
         parent::__construct(static::NAME, static::VERSION);
 
         $this->getDefinition()->addOption(
-            new InputOption('--config-path', '-c', InputOption::VALUE_OPTIONAL, 'The path to lbm-config.yml')
+            new InputOption(
+                '--config-path',
+                '-c',
+                InputOption::VALUE_OPTIONAL,
+                'The path to lbm-config.yml'
+            )
         );
     }
 
@@ -113,9 +118,9 @@ class Application extends BaseApplication
      */
     private function getConfigDirectory(InputInterface $input)
     {
-        $configDir = $input->getParameterOption(array('--config-path', '-c'));
+        $configDir = $input->getParameterOption(array('--config-path', '-c'), 'config');
         if (false !== $configDir && !is_dir($configDir)) {
-            throw new \RuntimeException('Invalid config directory specified.');
+            throw new \RuntimeException(sprintf('Config directory "%s" don\'t exist.', $configDir));
         }
 
         return $configDir;

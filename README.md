@@ -33,7 +33,7 @@ Deactivates the ```<webserver>``` on ```<loadbalancer>```.
 
 You can install this tool with composer or checkout the git repository.
 
-You need a config file called ```lbm-config.yml``` in ```app/config``` or on other place. Then you must give the file
+You need a config file called ```lbm-config.yml``` in ```config``` or on other place. Then you must give the file
 path to the command with the parameter ```--config-path```.
 
 The config file looks like:
