@@ -59,11 +59,7 @@ class Application extends BaseApplication
             $this->commandsRegistered = true;
         }
 
-        $this->setUpContainerBuilder($input);
-
-        $containerBuilder = $this->setUpContainerBuilder($input);
-
-        $this->container = $containerBuilder;
+        $this->container = $this->setUpContainerBuilder($input);
 
         $exitCode = parent::doRun($input, $output);
 
@@ -114,21 +110,6 @@ class Application extends BaseApplication
     /**
      * @param InputInterface $input
      *
-     * @return string
-     */
-    private function getConfigDirectory(InputInterface $input)
-    {
-        $configDir = $input->getParameterOption(array('--config-path', '-c'), 'config');
-        if (false !== $configDir && !is_dir($configDir)) {
-            throw new \RuntimeException(sprintf('Config directory "%s" don\'t exist.', $configDir));
-        }
-
-        return $configDir;
-    }
-
-    /**
-     * @param InputInterface $input
-     *
      * @return ContainerBuilder
      */
     private function setUpContainerBuilder(InputInterface $input)
@@ -144,5 +125,20 @@ class Application extends BaseApplication
         $containerBuilder->compile();
 
         return $containerBuilder;
+    }
+
+    /**
+     * @param InputInterface $input
+     *
+     * @return string
+     */
+    private function getConfigDirectory(InputInterface $input)
+    {
+        $configDir = $input->getParameterOption(array('--config-path', '-c'), 'config');
+        if (false !== $configDir && !is_dir($configDir)) {
+            throw new \RuntimeException(sprintf('Config directory "%s" don\'t exist.', $configDir));
+        }
+
+        return $configDir;
     }
 }
