@@ -29,11 +29,12 @@ class Application extends BaseApplication
     /**
      * @var ContainerBuilder
      */
-    private $container;
+    private $containerBuilder;
 
     public function __construct()
     {
         parent::__construct(static::NAME, static::VERSION);
+        $this->containerBuilder = new ContainerBuilder();
 
         $this->getDefinition()->addOption(
             new InputOption(
@@ -59,9 +60,18 @@ class Application extends BaseApplication
             $this->commandsRegistered = true;
         }
 
-        $this->container = $this->setUpContainerBuilder($input);
+        try {
+            $this->setUpContainerBuilder($input);
+        } catch (\Exception $e) {
+            $output->writeln(sprintf('<error>%s</error>', 'Can\'t find config file.'));
+        }
 
-        $exitCode = parent::doRun($input, $output);
+        try {
+            $exitCode = parent::doRun($input, $output);
+        } catch (\Exception $e) {
+            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            $exitCode = 1;
+        }
 
         return $exitCode || 0;
     }
@@ -84,7 +94,7 @@ class Application extends BaseApplication
      */
     public function getLoadBalancerConfig()
     {
-        return $this->container->getParameter('marktjagd_load_balancer_manager');
+        return $this->containerBuilder->getParameter('marktjagd_load_balancer_manager');
     }
 
     /**
@@ -115,16 +125,13 @@ class Application extends BaseApplication
     private function setUpContainerBuilder(InputInterface $input)
     {
         $configDir = $this->getConfigDirectory($input);
-        $diExtension = new MarktjagdLoadBalancerManagerExtension($configDir);
-        $containerBuilder = new ContainerBuilder();
-        $containerBuilder->registerExtension($diExtension);
+        $lbmExtension = new MarktjagdLoadBalancerManagerExtension($configDir);
+        $this->containerBuilder->registerExtension($lbmExtension);
 
-        $loader = new YamlFileLoader($containerBuilder, new FileLocator($configDir));
+        $loader = new YamlFileLoader($this->containerBuilder, new FileLocator($configDir));
         $loader->load('lbm-config.yml');
 
-        $containerBuilder->compile();
-
-        return $containerBuilder;
+        $this->containerBuilder->compile();
     }
 
     /**
