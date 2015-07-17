@@ -30,6 +30,7 @@ class Application extends BaseApplication
      * @var ContainerBuilder
      */
     private $containerBuilder;
+    private $configDir;
 
     public function __construct()
     {
@@ -60,20 +61,9 @@ class Application extends BaseApplication
             $this->commandsRegistered = true;
         }
 
-        try {
-            $this->setUpContainerBuilder($input);
-        } catch (\Exception $e) {
-            $output->writeln(sprintf('<error>%s</error>', 'Can\'t find config file.'));
-        }
+        $this->setUpConfig($input);
 
-        try {
-            $exitCode = parent::doRun($input, $output);
-        } catch (\Exception $e) {
-            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
-            $exitCode = 1;
-        }
-
-        return $exitCode || 0;
+        return parent::doRun($input, $output);
     }
 
     /**
@@ -94,6 +84,8 @@ class Application extends BaseApplication
      */
     public function getLoadBalancerConfig()
     {
+        $this->setUpContainerBuilder();
+
         return $this->containerBuilder->getParameter('marktjagd_load_balancer_manager');
     }
 
@@ -103,6 +95,19 @@ class Application extends BaseApplication
     public function getHttpClient()
     {
         return new Client();
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfigDirectory()
+    {
+        $configDir = $this->configDir;
+        if (false !== $configDir && !is_dir($configDir)) {
+            throw new \RuntimeException(sprintf('Config directory "%s" don\'t exist.', $configDir));
+        }
+
+        return $configDir;
     }
 
     private function registerCommands()
@@ -118,13 +123,11 @@ class Application extends BaseApplication
     }
 
     /**
-     * @param InputInterface $input
-     *
      * @return ContainerBuilder
      */
-    private function setUpContainerBuilder(InputInterface $input)
+    private function setUpContainerBuilder()
     {
-        $configDir = $this->getConfigDirectory($input);
+        $configDir = $this->getConfigDirectory();
         $lbmExtension = new MarktjagdLoadBalancerManagerExtension($configDir);
         $this->containerBuilder->registerExtension($lbmExtension);
 
@@ -136,16 +139,10 @@ class Application extends BaseApplication
 
     /**
      * @param InputInterface $input
-     *
-     * @return string
      */
-    private function getConfigDirectory(InputInterface $input)
+    private function setUpConfig(InputInterface $input)
     {
         $configDir = $input->getParameterOption(array('--config-path', '-c'), 'config');
-        if (false !== $configDir && !is_dir($configDir)) {
-            throw new \RuntimeException(sprintf('Config directory "%s" don\'t exist.', $configDir));
-        }
-
-        return $configDir;
+        $this->configDir = $configDir;
     }
 }
