@@ -64,6 +64,86 @@ class Apache22AdapterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testInit()
+    {
+        $this->assertInstanceOf(
+            'Marktjagd\LoadBalancerManager\LoadBalancer\Adapter\AbstractLoadBalancer',
+            $this->apacheAdapter
+        );
+    }
+
+    /**
+     * @param $balancerStartPage
+     *
+     * @dataProvider invalidPartDataProvider
+     */
+    public function testThrowsExceptionIfLoadBalancerPartNotFound($balancerStartPage)
+    {
+        $config = $this->config;
+        $config['part'] = 'unknown';
+
+        $expectedMessage = sprintf('Can\'t find part "%s" on load balancer', $config['part']);
+        $this->setExpectedException('\Exception', $expectedMessage);
+
+        $this->apacheAdapter = new Apache22(
+            $this->httpClient,
+            $config
+        );
+
+        $this->response->expects($this->any())
+            ->method('getBody')
+            ->with(true)
+            ->willReturn($balancerStartPage);
+
+        $this->apacheAdapter->activateWebserver('web1');
+    }
+
+    public function testThrowsExceptionIfWorkerNotFoundInConfiguration()
+    {
+        $worker = 'web1';
+        $config = $this->config;
+        $balancerStartPage = file_get_contents(__DIR__ . '/../assets/apache22_startpage.html');
+
+        unset($config[$worker]);
+
+        $expectedMessage = sprintf('Worker "%s" not found in configuration', $worker);
+        $this->setExpectedException('\Exception', $expectedMessage);
+
+        $this->apacheAdapter = new Apache22(
+            $this->httpClient,
+            $config
+        );
+
+        $this->response->expects($this->any())
+            ->method('getBody')
+            ->with(true)
+            ->willReturn($balancerStartPage);
+
+        $this->apacheAdapter->activateWebserver($worker);
+    }
+
+    public function testThrowExceptionIfWorkerNotFoundOnApacheLoadBalancerPage()
+    {
+        $worker = 'web1';
+        $config = $this->config;
+        $balancerStartPage = file_get_contents(__DIR__ . '/../assets/apache22_startpage.html');
+
+        $expectedMessage = sprintf('Worker "%s" not found in configuration', $worker);
+        $this->setExpectedException('\Exception', $expectedMessage);
+
+        $this->apacheAdapter = new Apache22(
+            $this->httpClient,
+            $config
+        );
+
+        $this->response->expects($this->any())
+            ->method('getBody')
+            ->with(true)
+            ->willReturn($balancerStartPage);
+
+        $this->apacheAdapter->activateWebserver($worker);
+    }
+
     public function invalidPartDataProvider()
     {
         $data = array(
