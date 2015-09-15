@@ -30,19 +30,38 @@ class DeactivateCommand extends AbstractCommand
 
         $loadBalancerFactory = $this->getLoadBalancerFactory();
 
-        $adapter = $loadBalancerFactory->getLoadBalancerAdapter($loadBalancer);
+        $adapters = $loadBalancerFactory->getLoadBalancerAdapter($loadBalancer);
 
-        $result = $adapter->deactivateWebserver($webServer);
-        if (true === $result) {
-            $output->writeln(sprintf('<info>Worker %s on load balancer %s deactivated</info>', $webServer, $loadBalancer));
+        $errors = false;
+        foreach ($adapters as $adapter) {
 
-            return 0;
+            $result = $adapter->deactivateWebserver($webServer);
+            $loadBalancerUrl = $adapter->getLoadBalancerUrl();
+
+            if (true === $result) {
+                $output->writeln(
+                    sprintf(
+                        '<info>Worker %s on load balancer %s (%s) deactivated</info>',
+                        $webServer,
+                        $loadBalancer,
+                        $loadBalancerUrl
+                    )
+                );
+
+                continue;
+            }
+
+            $errors = true;
+            $output->writeln(
+                sprintf(
+                    '<error>Error while deactivating %s on load balancer %s (%s)</error>',
+                    $webServer,
+                    $loadBalancer,
+                    $loadBalancerUrl
+                )
+            );
         }
 
-        $output->writeln(
-            sprintf('<error>Error while deactivating %s on load balancer %s</error>', $webServer, $loadBalancer)
-        );
-
-        return 1;
+        return (int) $errors;
     }
 }

@@ -23,21 +23,26 @@ class StatusCommand extends AbstractCommand
         $loadBalancer = $input->getArgument('loadbalancer');
 
         $factory = $this->getLoadBalancerFactory();
-        $adapter = $factory->getLoadBalancerAdapter($loadBalancer);
-        $worker = $adapter->getWebserverStatus();
+        $adapters = $factory->getLoadBalancerAdapter($loadBalancer);
 
-        $table = $this->getHelper('table');
-        $table->setHeaders(array('Worker', 'Status'));
-        $table->setRows($worker);
+        foreach ($adapters as $adapter) {
+            $worker = $adapter->getWebserverStatus();
+            $loadBalancerUrl = $adapter->getLoadBalancerUrl();
 
-        $output->writeln(
-            sprintf(
-                'Status for load balancer <info>%s</info> on part <info>%s</info>',
-                $loadBalancer,
-                $adapter->getLoadBalancerStatusPart()
-            )
-        );
-        $table->render($output);
+            $table = $this->getHelper('table');
+            $table->setHeaders(array('Worker', 'Status'));
+            $table->setRows($worker);
+
+            $output->writeln(
+                sprintf(
+                    'Status for load balancer <info>%s (%s)</info> on part <info>%s</info>',
+                    $loadBalancer,
+                    $loadBalancerUrl,
+                    $adapter->getLoadBalancerStatusPart()
+                )
+            );
+            $table->render($output);
+        }
 
         return 0;
     }

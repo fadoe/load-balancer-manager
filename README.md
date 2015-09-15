@@ -41,7 +41,8 @@ The config file looks like:
 ```yml
 marktjagd_load_balancer_manager:
     loadbalancer1:                      # the name from the load balancer, used for command line
-        host: <http://example.com>      # the url to the load balancer
+        host: <example.com>             # the url to the load balancer
+        protocols: [ 'http', 'https' ]  # the protocoles for the load balancer, default 'http'
         part: <portal>                  # the part on the apache page after balancer://
         auth:                           # authentication via http auth, optional
             username: <username>        # the username
@@ -53,7 +54,8 @@ marktjagd_load_balancer_manager:
                 host: 192.168.1.2       # the host for the worker
             ...                         # more worker
     loadbalancer2:                      # other name from a load balancer, used for command line
-        host: <http://example.com>      # other url to the load balancer
+        host: <example.com>             # other url to the load balancer
+        protocols: [ 'http', 'https' ]  # other protocoles for the load balancer, default 'http'
         part: <blog>                    # other name on the apache page after balancer://
         auth:
             ...

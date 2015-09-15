@@ -30,21 +30,37 @@ class ActivateCommand extends AbstractCommand
 
         $loadBalancerFactory = $this->getLoadBalancerFactory();
 
-        $adapter = $loadBalancerFactory->getLoadBalancerAdapter($loadBalancer);
+        $adapters = $loadBalancerFactory->getLoadBalancerAdapter($loadBalancer);
 
-        $result = $adapter->activateWebserver($webServer);
-        if (true === $result) {
+        $errors = false;
+        foreach ($adapters as $adapter) {
+            $result = $adapter->activateWebserver($webServer);
+            $loadBalancerUrl = $adapter->getLoadBalancerUrl();
+
+            if (true === $result) {
+                $output->writeln(
+                    sprintf(
+                        '<info>Worker %s on load balancer %s (%s) activated</info>',
+                        $webServer,
+                        $loadBalancer,
+                        $loadBalancerUrl
+                    )
+                );
+
+                continue;
+            }
+
+            $errors = true;
             $output->writeln(
-                sprintf('<info>Worker %s on load balancer %s activated</info>', $webServer, $loadBalancer)
+                sprintf(
+                    '<error>Error while activating worker %s (%s) on load balancer %s</error>',
+                    $webServer,
+                    $loadBalancer,
+                    $loadBalancerUrl
+                )
             );
-
-            return 0;
         }
 
-        $output->writeln(
-            sprintf('<error>Error while activating worker %s on load balancer %s</error>', $webServer, $loadBalancer)
-        );
-
-        return 1;
+        return (int) $errors;
     }
 }

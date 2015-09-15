@@ -24,6 +24,14 @@ abstract class AbstractLoadBalancer
     }
 
     /**
+     * @return string
+     */
+    public function getLoadBalancerUrl()
+    {
+        return $this->httpClient->getBaseUrl();
+    }
+
+    /**
      * @return ClientInterface
      */
     protected function getHttpClient()

@@ -24,7 +24,7 @@ class LoadBalancerFactory
      *
      * @throws \Exception
      *
-     * @return Adapter\AbstractLoadBalancer
+     * @return Adapter\AbstractLoadBalancer[]
      */
     public function getLoadBalancerAdapter($loadBalancer)
     {
@@ -34,6 +34,10 @@ class LoadBalancerFactory
 
         $config = $this->config[$loadBalancer];
 
+        if (false === $this->isProtocolConfigValueIsValid($config)) {
+            throw new \Exception('The protocol config key is invalid.');
+        }
+
         $requestOptions = array(
             'verify' => false,
         );
@@ -41,7 +45,6 @@ class LoadBalancerFactory
             $requestOptions['auth'] = array($config['auth']['username'], $config['auth']['password'], 'Basic');
         }
 
-        $this->httpClient->setBaseUrl($config['host']);
         $this->httpClient->setConfig(
             array(
                 'redirect.disable' => true,
@@ -49,23 +52,34 @@ class LoadBalancerFactory
             )
         );
 
-        $apacheVersion = $this->getApacheVersion();
-        $adapterClass = $this->convertApacheVersionToFactoryMethod($apacheVersion);
+        $adapterClasses = array();
+        foreach ($config['protocols'] as $protocol) {
+            $baseHost = sprintf('%s://%s', $protocol, $config['host']);
 
-        if (false === class_exists($adapterClass)) {
-            throw new \Exception('No load balancer adapter found');
+            $httpClient = clone $this->httpClient;
+            $httpClient->setBaseUrl($baseHost);
+
+            $apacheVersion = $this->getApacheVersion($httpClient);
+            $adapterClass = $this->convertApacheVersionToFactoryMethod($apacheVersion);
+
+            if (false === class_exists($adapterClass)) {
+                throw new \Exception('No load balancer adapter found');
+            }
+
+            $adapterClasses[] = new $adapterClass($httpClient, $config);
         }
 
-        return new $adapterClass($this->httpClient, $config);
+        return $adapterClasses;
     }
 
     /**
+     * @param ClientInterface $httpClient
+     *
      * @return string
      */
-    private function getApacheVersion()
+    private function getApacheVersion(ClientInterface $httpClient)
     {
-        $request = $this->httpClient->get('/balancer');
-
+        $request = $httpClient->get('/balancer');
         $response = $request->send();
 
         $crawler = new Crawler($response->getBody(true));
@@ -106,5 +120,19 @@ class LoadBalancerFactory
         $adapterName = preg_replace($regex, $replace, $version);
 
         return $adapterName;
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return bool
+     */
+    private function isProtocolConfigValueIsValid(array $config)
+    {
+        if (true === isset($config['protocols'])) {
+            return (0 < count($config['protocols']));
+        }
+
+        return false;
     }
 }

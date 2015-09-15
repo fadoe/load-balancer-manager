@@ -57,9 +57,10 @@ class LoadBalancerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->config = array(
             'loadbalancer1' => array(
-                'host' => 'http://example.com',
+                'host' => 'example.com',
+                'protocols' => array('http'),
                 'web1' => array(
-                    'host' => 'http://example.com'
+                    'host' => 'example.com'
                 )
             )
         );
@@ -125,9 +126,10 @@ class LoadBalancerFactoryTest extends \PHPUnit_Framework_TestCase
 
         $adapter = $this->loadBalancerFactory->getLoadBalancerAdapter($loadBalancer);
 
+        $this->assertInternalType('array', $adapter);
         $this->assertInstanceOf(
             $expectedAdapter,
-            $adapter
+            $adapter[0]
         );
     }
 

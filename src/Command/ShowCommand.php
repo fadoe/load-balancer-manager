@@ -18,15 +18,18 @@ class ShowCommand extends AbstractCommand
         $balancers = $this->getApplication()->getLoadBalancerConfig();
 
         $table = $this->getHelper('table');
-        $table->setHeaders(array('HOST'));
+        $table->setHeaders(array('Name', 'Host'));
 
         foreach ($balancers as $balancer => $value) {
 
             $output->writeln(sprintf('Info about <info>%s</info> on part <info>%s</info>', $balancer, $value['part']));
 
             $rows = array();
-            foreach ($value['hosts'] as $host) {
-                $rows[] = array_values($host);
+            foreach ($value['hosts'] as $name => $host) {
+                $hosts = array_values($host);
+                array_splice($hosts, 0, 0, $name);
+
+                $rows[] = $hosts;
             }
 
             $table->setRows($rows);
