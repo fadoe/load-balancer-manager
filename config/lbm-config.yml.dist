@@ -1,6 +1,7 @@
 marktjagd_load_balancer_manager:
     loadbalancer1:
-        host: http://example.com
+        host: example.com
+        protocols: [ http ]
         part: portal
         auth:
             username: username
@@ -11,7 +12,7 @@ marktjagd_load_balancer_manager:
             host2:
                 host: 192.168.1.12
     loadbalancer2:
-        host: http://example.com
+        host: example.com
         part: blog
         auth:
             username: username
